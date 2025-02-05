@@ -116,7 +116,7 @@ export default class PostServiceImpl implements PostService {
         const post = await this.findPost(postId);
         post.comments.push({ user, message } as CommentDto);
         await post.save();
-        const postDto = new PostDto(
+        return new PostDto(
             post.id,
             post.title,
             post.content,
@@ -126,15 +126,12 @@ export default class PostServiceImpl implements PostService {
             post.likes,
             post.comments.map(c => new CommentDto(c.user, c.message, c.likes, c.dateCreated))
         );
-
-        return postDto;
     };
 
     async addLike(postId: string): Promise<{ result: string }> {
         const post = await this.findPost(postId);
         post.likes = post.likes + 1;
         await post.save();
-        console.log(post.likes)
         return Promise.resolve({result: "Like added +1"});
     }
 
